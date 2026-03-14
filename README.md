@@ -28,6 +28,31 @@ Built with Django and Django REST Framework.
 - JWT Authentication
 
 ---
+## Architecture
+
+The project follows a layered architecture:
+
+Client
+   ↓
+Views (API endpoints)
+   ↓
+Serializers (data validation)
+   ↓
+Services (business logic)
+   ↓
+Models (database)
+
+Key logic such as appointment scheduling and conflict detection is handled in the service layer.
+
+
+## Booking Flow
+
+1. Client requests available slots for a doctor.
+2. The system generates time slots for the selected date.
+3. Booked slots are removed from the list.
+4. Client selects a slot and creates an appointment.
+5. The system checks for conflicts before saving.
+
 
 ## API Examples
 
