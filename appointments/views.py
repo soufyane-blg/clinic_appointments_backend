@@ -3,9 +3,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Appointment, AppointmentNote
 from .serializers import AppointmentSerializer, AppointmentNoteSerializer
+from doctors.models import DoctorProfile
 
 from core.permissions import IsAdmin, IsStaff, IsDoctorOwnerOfAppointment
 
@@ -27,15 +29,12 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         "status"
     ]
 
-
     def get_queryset(self):
         user = self.request.user
 
-       
         if user.is_staff or user.is_superuser:
             return Appointment.objects.all()
 
-        
         if hasattr(user, "doctorprofile"):
             return Appointment.objects.filter(doctor=user.doctorprofile)
 
@@ -125,3 +124,39 @@ class AppointmentNoteViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+
+
+# -------- Available Slots API --------
+
+class AvailableSlotsView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        doctor_id = request.query_params.get("doctor")
+        date = request.query_params.get("date")
+        start_time = request.query_params.get("start_time")
+        end_time = request.query_params.get("end_time")
+
+        if not doctor_id or not date or not start_time or not end_time:
+            raise ValidationError(
+                "doctor, date, start_time and end_time are required"
+            )
+
+        doctor = DoctorProfile.objects.get(id=doctor_id)
+
+        available = is_slot_available(
+            doctor=doctor,
+            date=date,
+            start_time=start_time,
+            end_time=end_time
+        )
+
+        return Response({
+            "doctor": doctor_id,
+            "date": date,
+            "start_time": start_time,
+            "end_time": end_time,
+            "available": available
+        })

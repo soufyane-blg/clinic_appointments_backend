@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'schedules',
     'rest_framework',
     'django_filters',
+    "drf_spectacular",
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -147,4 +148,11 @@ REST_FRAMEWORK = {
 
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Clinic Appointment API",
+    "DESCRIPTION": "API for managing clinic appointments, doctors, schedules, and patients.",
+    "VERSION": "1.0.0",
 }

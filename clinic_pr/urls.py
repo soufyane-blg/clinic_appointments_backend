@@ -17,15 +17,38 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+
+# API Root
+@api_view(["GET"])
+def api_root(request):
+    return Response({
+        "accounts": "/api/accounts/",
+        "appointments": "/api/appointments/",
+        "doctors": "/api/doctors/",
+        "organizations": "/api/organizations/",
+        "schedules": "/api/schedules/",
+        "token": "/api/token/",
+        "token_refresh": "/api/token/refresh/",
+    })
+
+
 urlpatterns = [
 
     # Admin
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+
+    # API Root
+    path("api/", api_root, name="api-root"),
 
     # JWT Authentication
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
@@ -37,4 +60,13 @@ urlpatterns = [
     path("api/doctors/", include("doctors.urls")),
     path("api/organizations/", include("organizations.urls")),
     path("api/schedules/", include("schedules.urls")),
+
+    # API Schema and Documentation
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
 ]
