@@ -6,6 +6,15 @@ Built with Django and Django REST Framework.
 
 ---
 
+## Key Highlights
+
+- Designed a scheduling system with conflict prevention
+- Implemented a service layer for business logic separation
+- Built a time-slot availability engine
+- Role-based access control for different user types
+
+---
+
 ## Features
 
 - JWT Authentication
