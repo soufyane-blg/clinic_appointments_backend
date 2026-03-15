@@ -1,7 +1,6 @@
 # Clinic Appointment Management API
 
-A RESTful API for managing clinic appointments with time-slot scheduling, 
-conflict prevention, and role-based access control.
+A RESTful API for managing clinic appointments with time-slot scheduling, conflict prevention, and role-based access control.
 
 Built with Django and Django REST Framework.
 
@@ -10,13 +9,13 @@ Built with Django and Django REST Framework.
 ## Features
 
 - JWT Authentication
+- Doctor profiles and working hours
 - Appointment scheduling system
-- Time slot generation
 - Conflict prevention (no overlapping appointments)
-- Appointment cancellation and rescheduling
+- Appointment rescheduling and cancellation
 - Available slots API
-- Filtering and pagination
-- Role-based access (admin / staff / doctor)
+- Role-based access control
+- Interactive API documentation (Swagger)
 
 ---
 
@@ -26,60 +25,59 @@ Built with Django and Django REST Framework.
 - Django
 - Django REST Framework
 - JWT Authentication
+- OpenAPI / Swagger (drf-spectacular)
 
 ---
+
 ## Architecture
 
 The project follows a layered architecture:
 
-Client
-   ↓
-Views (API endpoints)
-   ↓
-Serializers (data validation)
-   ↓
-Services (business logic)
-   ↓
+Client  
+↓  
+Views (API endpoints)  
+↓  
+Serializers (data validation)  
+↓  
+Services (business logic)  
+↓  
 Models (database)
 
-Key logic such as appointment scheduling and conflict detection is handled in the service layer.
+Core logic such as appointment scheduling and conflict detection is implemented in the service layer.
 
+---
 
-## Booking Flow
+## Main API Endpoints
 
-1. Client requests available slots for a doctor.
-2. The system generates time slots for the selected date.
-3. Booked slots are removed from the list.
-4. Client selects a slot and creates an appointment.
-5. The system checks for conflicts before saving.
-
-
-## API Examples
-
-Authentication:
-
-POST /api/token/
+Authentication  
+POST /api/token/  
 POST /api/token/refresh/
 
-Appointments:
-
-GET  /api/appointments/appointments/
-POST /api/appointments/appointments/
-POST /api/appointments/appointments/{id}/cancel/
+Appointments  
+GET  /api/appointments/appointments/  
+POST /api/appointments/appointments/  
+POST /api/appointments/appointments/{id}/cancel/  
 POST /api/appointments/appointments/{id}/reschedule/
 
-Available slots:
+Available slots  
+GET /api/appointments/available-slots/?doctor=1&date=2026-04-10&start_time=10:00&end_time=10:30
 
-GET /api/appointments/available-slots/?doctor_id=1&date=2026-04-10
+---
+
+## API Documentation
+
+Swagger UI available at:
+
+http://127.0.0.1:8000/api/docs/
 
 ---
 
 ## Run the Project
 
-git clone 
-cd clinic-api
-pip install -r requirements.txt
-python manage.py migrate
+git clone <repo_url>  
+cd clinic-api  
+pip install -r requirements.txt  
+python manage.py migrate  
 python manage.py runserver
 
 ---
@@ -87,4 +85,3 @@ python manage.py runserver
 ## Author
 
 Backend project for learning API design and scheduling systems with Django REST Framework.
-
